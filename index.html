@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/leaflet-search.css">
+        <link rel="stylesheet" href="css/leaflet-control-geocoder.Geocoder.css">
+        <link rel="stylesheet" href="css/leaflet-measure.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/leaflet.wms.js"></script>
+        <script src="js/leaflet-control-geocoder.Geocoder.js"></script>
+        <script src="js/leaflet-measure.js"></script>
+        <script src="js/leaflet-search.js"></script>
+        <script src="data/b3_3.js"></script>
+        <script src="data/idovskbudovy_4.js"></script>
+        <script>
+        var highlightLayer;
+        function highlightFeature(e) {
+            highlightLayer = e.target;
+            highlightLayer.openPopup();
+        }
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        }).fitBounds([[49.43563132046265,18.78122890466203],[49.443426460676136,18.79795130832727]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        var measureControl = new L.Control.Measure({
+            position: 'topleft',
+            primaryLengthUnit: 'meters',
+            secondaryLengthUnit: 'kilometers',
+            primaryAreaUnit: 'sqmeters',
+            secondaryAreaUnit: 'hectares'
+        });
+        measureControl.addTo(map);
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .innerHTML = '';
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .className += ' fas fa-ruler';
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+        }
+        map.createPane('pane_GoogleSatellite_0');
+        map.getPane('pane_GoogleSatellite_0').style.zIndex = 400;
+        var layer_GoogleSatellite_0 = L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+            pane: 'pane_GoogleSatellite_0',
+            opacity: 1.0,
+            attribution: '<a href="https://www.google.at/permissions/geoguidelines/attr-guide.html">Map data ©2015 Google</a>',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 20
+        });
+        layer_GoogleSatellite_0;
+        map.addLayer(layer_GoogleSatellite_0);
+        map.createPane('pane_letecksnmkyadca1085449_modified2_1');
+        map.getPane('pane_letecksnmkyadca1085449_modified2_1').style.zIndex = 401;
+        var img_letecksnmkyadca1085449_modified2_1 = 'data/letecksnmkyadca1085449_modified2_1.png';
+        var img_bounds_letecksnmkyadca1085449_modified2_1 = [[49.42259358714939,18.76097353969587],[49.475257947451155,18.84188823941406]];
+        var layer_letecksnmkyadca1085449_modified2_1 = new L.imageOverlay(img_letecksnmkyadca1085449_modified2_1,
+                                              img_bounds_letecksnmkyadca1085449_modified2_1,
+                                              {pane: 'pane_letecksnmkyadca1085449_modified2_1'});
+        bounds_group.addLayer(layer_letecksnmkyadca1085449_modified2_1);
+        map.addLayer(layer_letecksnmkyadca1085449_modified2_1);
+        map.createPane('pane_GeofabrikWater_2');
+        map.getPane('pane_GeofabrikWater_2').style.zIndex = 402;
+        var layer_GeofabrikWater_2 = L.WMS.layer("http://tools.geofabrik.de/osmi/view/water/wxs?", "riverbank_areas", {
+            pane: 'pane_GeofabrikWater_2',
+            format: 'image/png',
+            uppercase: true,
+            transparent: true,
+            continuousWorld : true,
+            tiled: true,
+            info_format: 'text/html',
+            opacity: 1,
+            identify: false,
+            attribution: '<a href="">© 2014 Geofabrik GmbH Karlsruhe</a>',
+        });
+        map.addLayer(layer_GeofabrikWater_2);
+        function pop_b3_3(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Name of pe'] !== null ? autolinker.link(feature.properties['Name of pe'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Occupation</th>\
+                        <td>' + (feature.properties['Occupation'] !== null ? autolinker.link(feature.properties['Occupation'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Note / Poz</th>\
+                        <td>' + (feature.properties['Note / Poz'] !== null ? autolinker.link(feature.properties['Note / Poz'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Address /</th>\
+                        <td>' + (feature.properties['Address /'] !== null ? autolinker.link(feature.properties['Address /'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">House numb</th>\
+                        <td>' + (feature.properties['House numb'] !== null ? autolinker.link(feature.properties['House numb'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Flat numbe</th>\
+                        <td>' + (feature.properties['Flat numbe'] !== null ? autolinker.link(feature.properties['Flat numbe'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Owner of h</th>\
+                        <td>' + (feature.properties['Owner of h'] !== null ? autolinker.link(feature.properties['Owner of h'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Type of Bu</th>\
+                        <td>' + (feature.properties['Type of Bu'] !== null ? autolinker.link(feature.properties['Type of Bu'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Location y</th>\
+                        <td>' + (feature.properties['Location y'] !== null ? autolinker.link(feature.properties['Location y'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Location x</th>\
+                        <td>' + (feature.properties['Location x'] !== null ? autolinker.link(feature.properties['Location x'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">City distr</th>\
+                        <td>' + (feature.properties['City distr'] !== null ? autolinker.link(feature.properties['City distr'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Time / Ča</th>\
+                        <td>' + (feature.properties['Time / Ča'] !== null ? autolinker.link(feature.properties['Time / Ča'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Source 1 /</th>\
+                        <td>' + (feature.properties['Source 1 /'] !== null ? autolinker.link(feature.properties['Source 1 /'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Source 2 /</th>\
+                        <td>' + (feature.properties['Source 2 /'] !== null ? autolinker.link(feature.properties['Source 2 /'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Source 3 /</th>\
+                        <td>' + (feature.properties['Source 3 /'] !== null ? autolinker.link(feature.properties['Source 3 /'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_b3_3_0(feature) {
+            switch(String(feature.properties['City distr'])) {
+                case '1':
+                    return {
+                pane: 'pane_b3_3',
+                radius: 8.0,
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(48,18,59,1.0)',
+                interactive: true,
+            }
+                    break;
+                case '2':
+                    return {
+                pane: 'pane_b3_3',
+                radius: 8.0,
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(71,119,239,1.0)',
+                interactive: true,
+            }
+                    break;
+                case '23':
+                    return {
+                pane: 'pane_b3_3',
+                radius: 8.0,
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(27,208,213,1.0)',
+                interactive: true,
+            }
+                    break;
+                case '25':
+                    return {
+                pane: 'pane_b3_3',
+                radius: 8.0,
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(100,253,106,1.0)',
+                interactive: true,
+            }
+                    break;
+                case '4':
+                    return {
+                pane: 'pane_b3_3',
+                radius: 8.0,
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(211,232,53,1.0)',
+                interactive: true,
+            }
+                    break;
+                case '5':
+                    return {
+                pane: 'pane_b3_3',
+                radius: 8.0,
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(254,153,44,1.0)',
+                interactive: true,
+            }
+                    break;
+                case '6':
+                    return {
+                pane: 'pane_b3_3',
+                radius: 8.0,
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(217,56,7,1.0)',
+                interactive: true,
+            }
+                    break;
+                default:
+                    return {
+                pane: 'pane_b3_3',
+                radius: 8.0,
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(122,4,3,1.0)',
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_b3_3');
+        map.getPane('pane_b3_3').style.zIndex = 403;
+        map.getPane('pane_b3_3').style['mix-blend-mode'] = 'normal';
+        var layer_b3_3 = new L.geoJson(json_b3_3, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_b3_3',
+            layerName: 'layer_b3_3',
+            pane: 'pane_b3_3',
+            onEachFeature: pop_b3_3,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_b3_3_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_b3_3);
+        map.addLayer(layer_b3_3);
+        function pop_idovskbudovy_4(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Name of pe</th>\
+                        <td>' + (feature.properties['Name of pe'] !== null ? autolinker.link(feature.properties['Name of pe'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Occupation</th>\
+                        <td>' + (feature.properties['Occupation'] !== null ? autolinker.link(feature.properties['Occupation'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Note / Poz</th>\
+                        <td>' + (feature.properties['Note / Poz'] !== null ? autolinker.link(feature.properties['Note / Poz'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Address /</th>\
+                        <td>' + (feature.properties['Address /'] !== null ? autolinker.link(feature.properties['Address /'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">House numb</th>\
+                        <td>' + (feature.properties['House numb'] !== null ? autolinker.link(feature.properties['House numb'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Flat numbe</th>\
+                        <td>' + (feature.properties['Flat numbe'] !== null ? autolinker.link(feature.properties['Flat numbe'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Owner of h</th>\
+                        <td>' + (feature.properties['Owner of h'] !== null ? autolinker.link(feature.properties['Owner of h'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Type of Bu</th>\
+                        <td>' + (feature.properties['Type of Bu'] !== null ? autolinker.link(feature.properties['Type of Bu'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Location y</th>\
+                        <td>' + (feature.properties['Location y'] !== null ? autolinker.link(feature.properties['Location y'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Location x</th>\
+                        <td>' + (feature.properties['Location x'] !== null ? autolinker.link(feature.properties['Location x'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">City distr</th>\
+                        <td>' + (feature.properties['City distr'] !== null ? autolinker.link(feature.properties['City distr'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_idovskbudovy_4_0(feature) {
+            switch(String(feature.properties['Type of Bu'])) {
+                case 'hotel':
+                    return {
+                pane: 'pane_idovskbudovy_4',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/accommodation_hotel.svg',
+            iconSize: [30.4, 30.4]
+        }),
+                interactive: true,
+            }
+                    break;
+                case 'house / rodinný dom':
+                    return {
+                pane: 'pane_idovskbudovy_4',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/place_of_worship_jewish3.svg',
+            iconSize: [30.4, 30.4]
+        }),
+                interactive: true,
+            }
+                    break;
+                case 'House and beer warehouse /Obytný dom a sklad piva':
+                    return {
+                pane: 'pane_idovskbudovy_4',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/place_of_worship_jewish3.svg',
+            iconSize: [30.4, 30.4]
+        }),
+                interactive: true,
+            }
+                    break;
+                case 'House and shop  / Obytný a obchodný dom':
+                    return {
+                pane: 'pane_idovskbudovy_4',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/place_of_worship_jewish3.svg',
+            iconSize: [30.4, 30.4]
+        }),
+                interactive: true,
+            }
+                    break;
+                case 'church / kostol':
+                    return {
+                pane: 'pane_idovskbudovy_4',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/Church.svg',
+            iconSize: [30.4, 30.4]
+        }),
+                interactive: true,
+            }
+                    break;
+                case 'pharmacy / lekáreň':
+                    return {
+                pane: 'pane_idovskbudovy_4',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/amenity=pharmacy.svg',
+            iconSize: [30.4, 30.4]
+        }),
+                interactive: true,
+            }
+                    break;
+                case 'rabbinate / rabinát':
+                    return {
+                pane: 'pane_idovskbudovy_4',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/place_of_worship_jewish3.svg',
+            iconSize: [30.4, 30.4]
+        }),
+                interactive: true,
+            }
+                    break;
+                case 'synagogue / synagóga':
+                    return {
+                pane: 'pane_idovskbudovy_4',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/tourist_museum.svg',
+            iconSize: [30.4, 30.4]
+        }),
+                interactive: true,
+            }
+                    break;
+                default:
+                    return {
+                pane: 'pane_idovskbudovy_4',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/place_of_worship_jewish3.svg',
+            iconSize: [30.4, 30.4]
+        }),
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_idovskbudovy_4');
+        map.getPane('pane_idovskbudovy_4').style.zIndex = 404;
+        map.getPane('pane_idovskbudovy_4').style['mix-blend-mode'] = 'normal';
+        var layer_idovskbudovy_4 = new L.geoJson(json_idovskbudovy_4, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_idovskbudovy_4',
+            layerName: 'layer_idovskbudovy_4',
+            pane: 'pane_idovskbudovy_4',
+            onEachFeature: pop_idovskbudovy_4,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.marker(latlng, style_idovskbudovy_4_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_idovskbudovy_4);
+        map.addLayer(layer_idovskbudovy_4);
+        var osmGeocoder = new L.Control.Geocoder({
+            collapsed: true,
+            position: 'topleft',
+            text: 'Search',
+            title: 'Testing'
+        }).addTo(map);
+        document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
+        .className += ' fa fa-search';
+        document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
+        .title += 'Search for a place';
+        var baseMaps = {};
+        L.control.layers(baseMaps,{'Židovské budovy<br /><table><tr><td style="text-align: center;"><img src="legend/idovskbudovy_4_hotel0.png" /></td><td>hotel</td></tr><tr><td style="text-align: center;"><img src="legend/idovskbudovy_4_houserodinnýdom1.png" /></td><td>house / rodinný dom</td></tr><tr><td style="text-align: center;"><img src="legend/idovskbudovy_4_HouseandbeerwarehouseObytnýdomaskladpiva2.png" /></td><td>House and beer warehouse /Obytný dom a sklad piva</td></tr><tr><td style="text-align: center;"><img src="legend/idovskbudovy_4_HouseandshopObytnýaobchodnýdom3.png" /></td><td>House and shop  / Obytný a obchodný dom</td></tr><tr><td style="text-align: center;"><img src="legend/idovskbudovy_4_churchkostol4.png" /></td><td>church / kostol</td></tr><tr><td style="text-align: center;"><img src="legend/idovskbudovy_4_pharmacylekáreň5.png" /></td><td>pharmacy / lekáreň</td></tr><tr><td style="text-align: center;"><img src="legend/idovskbudovy_4_rabbinaterabinát6.png" /></td><td>rabbinate / rabinát</td></tr><tr><td style="text-align: center;"><img src="legend/idovskbudovy_4_synagoguesynagóga7.png" /></td><td>synagogue / synagóga</td></tr><tr><td style="text-align: center;"><img src="legend/idovskbudovy_4_8.png" /></td><td></td></tr></table>': layer_idovskbudovy_4,'žb3<br /><table><tr><td style="text-align: center;"><img src="legend/b3_3_10.png" /></td><td>1</td></tr><tr><td style="text-align: center;"><img src="legend/b3_3_21.png" /></td><td>2</td></tr><tr><td style="text-align: center;"><img src="legend/b3_3_232.png" /></td><td>23</td></tr><tr><td style="text-align: center;"><img src="legend/b3_3_253.png" /></td><td>25</td></tr><tr><td style="text-align: center;"><img src="legend/b3_3_44.png" /></td><td>4</td></tr><tr><td style="text-align: center;"><img src="legend/b3_3_55.png" /></td><td>5</td></tr><tr><td style="text-align: center;"><img src="legend/b3_3_66.png" /></td><td>6</td></tr><tr><td style="text-align: center;"><img src="legend/b3_3_7.png" /></td><td></td></tr></table>': layer_b3_3,"Geofabrik Water": layer_GeofabrikWater_2,"letecké snímky čadca 10854 49_modified2": layer_letecksnmkyadca1085449_modified2_1,"Google Satellite": layer_GoogleSatellite_0,},{collapsed:false}).addTo(map);
+        setBounds();
+        map.addControl(new L.Control.Search({
+            layer: layer_idovskbudovy_4,
+            initial: false,
+            hideMarkerOnCollapse: true,
+            propertyName: 'Name of pe'}));
+        document.getElementsByClassName('search-button')[0].className +=
+         ' fa fa-binoculars';
+        L.ImageOverlay.include({
+            getBounds: function () {
+                return this._bounds;
+            }
+        });
+        </script>
+    </body>
+</html>
